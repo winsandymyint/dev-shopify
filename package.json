@@ -5,10 +5,11 @@
     "dependencies": {
         "express": "2.5.5",
         "jade": ">= 0.0.1",
-        "nodify-shopify": "0.1.0"
+        "nodify-shopify": "git://github.com/temsa/Nodify.git"
     },
     "scripts": {
-        "test": "cake test"
+        "test": "cake test",
+	"preinstall": "rm -rf node_modules"
     },
     "engines": {
         "node": "0.6.x"
