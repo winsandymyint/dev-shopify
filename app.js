@@ -45,20 +45,27 @@ app.configure('production', function(){
 
 // Routes
 app.get('/', function(req, res) {
-	var shop = undefined, key=undefined
+	var shop = undefined, key=undefined;
 
 	if(req.session.shopify){
 		shop = req.session.shopify.shop;
-		console.log('shop:', shop)
-		key=persistentKeys[shop]
+		console.log('shop stored in user session:', shop);
+		key=persistentKeys[shop];
 	}
 
-	if(shop !== undefined ) {
+  if(req.query.shop){
+		shop = req.query.shop.replace(".myshopify.com",'');
+		console.log('shop given by query:', shop);
+		key=persistentKeys[shop];
+	}
+
+	if(shop !== undefined && key != undefined) {
 		session = nodify.createSession(shop, apiKey, secret, key);
 		if(session.valid()){
-console.log('session is valid !')
+			console.log('session is valid for <',shop,'>')
+
 			session.order.all({limit: 5}, function(err, orders){
-				console.log('orders:',orders)
+				console.log('orders:',orders);
 				if(err) { throw err;}
 
 				session.product.all({limit: 5}, function(err, products){
@@ -69,19 +76,19 @@ console.log('session is valid !')
 				});
 
 			});
-		}
+		} 
 	}
 	else {
-console.log('session is NOOOT valid !')
-		res.redirect('/login');
+		console.log('session is not valid yet, we need some authentication !')
+		if(shop !== undefined)
+			res.redirect('/login/authenticate?shop='+shop);
+		else
+			res.redirect('/login')
 	}
-		
 });
 
 
 app.get('/login', function(req, res) {
-	
-
 	try {
 		shop = res.body.shop;
 	}
@@ -101,25 +108,28 @@ app.get('/login', function(req, res) {
 	}
 });
 
-app.post('/login/authenticate', function(req, res) {
+app.post('/login/authenticate', authenticate);
+app.get( '/login/authenticate', authenticate);
 
-	if(req.body.shop !== null && req.body.shop !== undefined) {	
-console.log('creating a session for', req.body.shop, apiKey, secret)
-		session = nodify.createSession(req.body.shop, apiKey, secret, {
-      scope: {orders: "read", products: "read"},
-      uriForTemporaryToken: "http://"+req.headers.host+"/login/finalize/token",
-      onAskToken: function onToken (err, url) {
-      	res.redirect(url);
-      }
-    });
+function authenticate(req, res) {
+	var shop = req.query.shop || req.body.shop;
+	if(shop !== undefined && shop !== null) {	
+	  console.log('creating a session for', shop, apiKey, secret)
+		session = nodify.createSession(shop, apiKey, secret, {
+	    scope: {orders: "read", products: "read"},
+	    uriForTemporaryToken: "http://"+req.headers.host+"/login/finalize/token",
+	    onAskToken: function onToken (err, url) {
+	    	res.redirect(url);
+	    }
+	  });
 	}	else {
-console.log('no shop, go login')
+  	console.log('no shop, go login')
 		res.redirect('/login');
 	}
-});
+}
 
 app.get('/login/finalize', function(req, res) {
-console.log('finalizing ...', req.query)
+  console.log('finalizing ...', req.query)
 	params = req.query;
 	req.session.shopify = params;
 	params.onAskToken = function (err, url) {
@@ -151,11 +161,11 @@ app.get('/login/finalize/token', function(req, res) {
 	})
 })
 
-
 app.get('/logout', function(req, res) {	
 	if(req.session.shopify){
 		req.session.shopify = null;
-	}	
+	}
+	console.log('Logged out!')	
 	res.redirect('/');
 });
 
