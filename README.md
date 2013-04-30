@@ -37,7 +37,6 @@ After your application has been given read or read/write API permission by your 
 * [Checking out the roots] (http://wiki.shopify.com/Shopify_App_Development) 
 * [Talking To Other Masters] (http://forums.shopify.com/categories/9) 
 * [Reading API Docs] (http://api.shopify.com) 
-* [Looking up the Shopify API Group] (https://groups.google.com/forum/#!forum/shopify-api) 
 
 
 ## Contributors:
