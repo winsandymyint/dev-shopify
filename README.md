@@ -56,7 +56,7 @@ After your application has been given read or read/write API permission by your 
 
 (The MIT License)
 
-Copyright (c) 2012 Shopfrogs &lt;info@shopfrogs.com&gt;
+Copyright (c) 2012-2013 Shopfrogs &lt;info@shopfrogs.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
