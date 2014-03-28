@@ -5,7 +5,7 @@ This is a Shopify App using Nodify-Shopify module. This app provides the layout 
 
 ### Installation
 
-    git clone git@github.com:Shopfrogs/Nodify-App.git
+    git clone git@github.com:microapps/Nodify-App.git
     cd Nodify-App
     npm install -d
     
@@ -17,7 +17,7 @@ Create a config.json file and declare your API key and Shared Secret.
 		"secret": "YOUR-SHARED-SECRET"
 	}
 
-If you don't have the API key and Shared Secret yet, sign up for a [Shopify Partner account](https://app.shopify.com/services/partners/signup/), and create your first app. You can also create test stores
+If you don't have the API key and Shared Secret yet, sign up for a [Shopify Partner account](https://app.shopify.com/services/partners/signup/?ref=microapps), and create your first app. You can also create test stores
 once you're logged in as a partner.
 
 When you create your app in the Shopify Partner Account, set the return URL to
@@ -33,10 +33,10 @@ After your application has been given read or read/write API permission by your 
 
 ## Become a master of the Shopify ecosystem by: 
 
-* [Becoming a Shopify App Developer] (https://app.shopify.com/services/partners/signup)
-* [Checking out the roots] (http://wiki.shopify.com/Shopify_App_Development) 
-* [Talking To Other Masters] (http://forums.shopify.com/categories/9) 
-* [Reading API Docs] (http://api.shopify.com) 
+* [Becoming a Shopify App Developer] (https://app.shopify.com/services/partners/signup?ref=microapps)
+* [Checking out the roots] (http://docs.shopify.com/api/the-basics/getting-started?ref=microapps) 
+* [Talking To Other Masters] (http://ecommerce.shopify.com/c/shopify-apps?ref=microapps) 
+* [Reading API Docs] (http://docs.shopify.com/api?ref=microapps) 
 * [Learning from others] (http://stackoverflow.com/questions/tagged/shopify) 
 
 
@@ -49,14 +49,14 @@ After your application has been given read or read/write API permission by your 
 
 [Alexandre Saiz] (https://github.com/alexandresaiz/)
 
-[Supported by Shopfrogs](http://www.shopfrogs.com/shopify/)
+Supported by [microapps](http://www.shopfrogs.com/shopify/)
 
 
 ## License 
 
 (The MIT License)
 
-Copyright (c) 2012-2013 Shopfrogs &lt;info@shopfrogs.com&gt;
+Copyright (c) 2012-2014 [microapps](http://www.shopfrogs.com/shopify/) &lt;hi@microapps.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
