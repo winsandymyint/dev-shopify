@@ -1,23 +1,23 @@
 {
-    "name": "nodify_sample_app",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-        "express": "2.5.5",
-        "jade": ">= 0.0.1",
-        "nodify-shopify": "git://github.com/Shopfrogs/Nodify.git"
-    },
-    "scripts": {
-        "test": "cake test",
-	"preinstall": "rm -rf node_modules"
-    },
-    "engines": {
-        "node": "0.12.5",
-        "npm": "2.11.2"
-    },
-    "devDependencies": {
-        "mocha": "0.12.x",
-        "should": "0.5.x",
-        "coffee-script": "1.2.x"
-    }
+  "name": "nodify_sample_app",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "2.5.5",
+    "jade": ">= 0.0.1",
+    "nodify-shopify": "git://github.com/Shopfrogs/Nodify.git"
+  },
+  "scripts": {
+    "test": "cake test",
+    "preinstall": "rm -rf node_modules"
+  },
+  "engines": {
+    "node": "0.12.5",
+    "npm": "2.11.2"
+  },
+  "devDependencies": {
+    "mocha": "0.12.x",
+    "should": "0.5.x",
+    "coffee-script": "1.2.x"
+  }
 }
