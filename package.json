@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "express": "2.5.5",
+    "express": "~4.0.0",
+    "body-parser": "~1.0.1",
     "jade": ">= 0.0.1",
     "nodify-shopify": "git://github.com/Shopfrogs/Nodify.git"
   },
@@ -18,6 +19,7 @@
   "devDependencies": {
     "mocha": "0.12.x",
     "should": "0.5.x",
+    "request": "2.65.0",
     "coffee-script": "1.2.x"
   }
 }

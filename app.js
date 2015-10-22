@@ -4,6 +4,7 @@
 
 var express = require('express')
   , routes = require('./routes')
+  , request = require('request')
 
 var app = module.exports = express.createServer();
 var nodify = require('nodify-shopify');
@@ -107,6 +108,15 @@ app.get('/login', function(req, res) {
 		res.render("login", {title: "Nodify App"});
 	}
 });
+
+//Send POST request to Swagger
+function subscribe (argument) {
+	request('www.google.com', function (error, response, body) {
+		if (!error && response.statauCode == 200) {
+			console.log("success") //
+		};
+	})
+}
 
 app.post('/login/authenticate', authenticate);
 app.get( '/login/authenticate', authenticate);
