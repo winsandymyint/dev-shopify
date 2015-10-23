@@ -24,7 +24,7 @@ else {
 }
 
 // Configuration
-
+// var webhook= app.
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -109,14 +109,14 @@ app.get('/login', function(req, res) {
 	}
 });
 
-//Send POST request to Swagger
+/*//Send POST request to Swagger
 function subscribe (argument) {
 	request('www.google.com', function (error, response, body) {
 		if (!error && response.statauCode == 200) {
 			console.log("success") //
 		};
 	})
-}
+}*/
 
 app.post('/login/authenticate', authenticate);
 app.get( '/login/authenticate', authenticate);

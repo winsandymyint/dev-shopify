@@ -20,6 +20,7 @@
     "mocha": "0.12.x",
     "should": "0.5.x",
     "request": "2.65.0",
-    "coffee-script": "1.2.x"
+    "coffee-script": "1.2.x",
+    "crypto": "0.0.3"
   }
 }
