@@ -48,6 +48,7 @@ app.post('/webhook', function(req, res) {
 	'topic': 'cart/update',
 	'address': 'http://'
 }*/
+/*
 var webhook= request({
 	url: '/admin/webhooks.json',
 	method: 'GET',
@@ -72,7 +73,7 @@ app.use(function(req, res, next) {
 
     next();
 });
-
+*/
 crypto.createHmac("SHA256", SHOPIFY_APP_SECRET).update(new Buffer(req.rawBody, 'utf8')).digest('base64');
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
