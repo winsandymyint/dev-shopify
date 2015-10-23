@@ -4,7 +4,6 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , request = require('request')
 
 var app = module.exports = express.createServer();
 var nodify = require('nodify-shopify');
@@ -24,7 +23,7 @@ else {
 }
 
 // Configuration
-// var webhook= app.
+
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -109,15 +108,6 @@ app.get('/login', function(req, res) {
 	}
 });
 
-/*//Send POST request to Swagger
-function subscribe (argument) {
-	request('www.google.com', function (error, response, body) {
-		if (!error && response.statauCode == 200) {
-			console.log("success") //
-		};
-	})
-}*/
-
 app.post('/login/authenticate', authenticate);
 app.get( '/login/authenticate', authenticate);
 
@@ -128,12 +118,12 @@ function authenticate(req, res) {
 		session = nodify.createSession(shop, apiKey, secret, {
 	    scope: {orders: "read", products: "read"},
 	    uriForTemporaryToken: "http://"+req.headers.host+"/login/finalize/token",
+	    // uriForTemporaryToken: "http://localhost:3000/login/finalize/token",
 	    onAskToken: function onToken (err, url) {
 	    	res.redirect(url);
 	    }
 	  });
 	}	else {
-  	console.log('no shop, go login')
 		res.redirect('/login');
 	}
 }
@@ -215,4 +205,3 @@ app.listen(port, function() {
 
 	console.log("Running on: ", app.address().port);
 });
-
