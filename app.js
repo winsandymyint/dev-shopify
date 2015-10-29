@@ -130,7 +130,7 @@ app.use(function(req, res, next) {
 app.use(express.bodyParser());
 
 app.post('/webhook', function (req, res) {
-	
+	console.log("HERE is webhook")
     var json = req.body;
     res.send(200);
         
@@ -147,6 +147,10 @@ function verifyShopifyHook(req) {
             .update(new Buffer(req.body, 'utf8'))
             .digest('base64');
     
+    console.log("#########")
+    console.log(req.headers['X-Shopify-Hmac-Sha256'])
+    console.log(digest)
+    console.log("!---------!")
     return digest === req.headers['X-Shopify-Hmac-Sha256'];
 }
 
