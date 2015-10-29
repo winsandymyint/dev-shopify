@@ -89,6 +89,10 @@ app.get('/', function(req, res) {
 });
 
 
+app.get('/webhook', function (req, res) {
+	console.log("I am here.")
+})
+
 app.get('/login', function(req, res) {
 	try {
 		shop = res.body.shop;
