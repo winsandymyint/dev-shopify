@@ -4,6 +4,7 @@
 
 var express = require('express')
   , routes = require('./routes')
+  , crypto = require('crypto')
 
 var app = module.exports = express.createServer();
 var nodify = require('nodify-shopify');
@@ -110,6 +111,46 @@ app.get('/login', function(req, res) {
 
 app.post('/login/authenticate', authenticate);
 app.get( '/login/authenticate', authenticate);
+
+/* ~ For Webhook ~ */ 
+const SECRET = config.secret;
+
+app.use(function(req, res, next) {
+  req.rawBody = '';
+  req.setEncoding('utf8');
+
+  req.on('data', function(chunk) { 
+    req.rawBody += chunk;
+  });
+
+  req.on('end', function() {
+    next();
+  });
+});
+app.use(express.bodyParser());
+
+app.post('/webhook', function (req, res) {
+	
+    var json = req.body;
+    res.send(200);
+        
+ 	if (verifyShopifyHook(req)) {
+ 	    res.writeHead(200);
+ 	    res.end('Verified webhook');
+ 	} else {
+ 	    res.writeHead(401);
+ 	    res.end('Unverified webhook');
+ 	}
+});
+function verifyShopifyHook(req) {
+    var digest = crypto.createHmac('SHA256', SECRET)
+            .update(new Buffer(req.body, 'utf8'))
+            .digest('base64');
+    
+    return digest === req.headers['X-Shopify-Hmac-Sha256'];
+}
+
+/* ~ End of Webhook ~ */ 
 
 function authenticate(req, res) {
 	var shop = req.query.shop || req.body.shop;
