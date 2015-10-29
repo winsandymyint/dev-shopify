@@ -126,7 +126,7 @@ function handleRequest(req, res) {
 }
 
 function verifyShopifyHook(req) {
-	var digest = crypto.createHmac('SHA256', hookSecret)
+	var digest = crypto.createHmac('SHA256', config.secret)
     .update(new Buffer(req.body, 'utf8'))
     .digest('base64');
     
