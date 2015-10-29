@@ -117,7 +117,7 @@ app.post('/login/authenticate', authenticate);
 app.get( '/login/authenticate', authenticate);
 
 /* ~ For Webhook ~ */ 
-const SECRET = config.secret;
+// const SECRET = config.secret;
 
 // app.use(function(req, res, next) {
 //   req.rawBody = '';
@@ -133,7 +133,7 @@ const SECRET = config.secret;
 // });
 // app.use(express.bodyParser());
 
-app.post('/webhook', function (req, res) {
+/*app.post('/webhook', function (req, res) {
 	
     var json = req.body;
     res.send(200);
@@ -154,7 +154,7 @@ function verifyShopifyHook(req) {
             .digest('base64');
     
     return digest === req.headers['X-Shopify-Hmac-Sha256'];
-}
+}*/
 
 /* ~ End of Webhook ~ */ 
 
