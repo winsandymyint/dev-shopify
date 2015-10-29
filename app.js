@@ -89,11 +89,6 @@ app.get('/', function(req, res) {
 });
 
 
-app.post('/webhook', function (req, res) {
-	console.log("I am here.")
-	console.log(req.headers)
-})
-
 app.get('/login', function(req, res) {
 	try {
 		shop = res.body.shop;
@@ -116,6 +111,42 @@ app.get('/login', function(req, res) {
 
 app.post('/login/authenticate', authenticate);
 app.get( '/login/authenticate', authenticate);
+
+
+/* WEBHOOK */
+var hookSecret= '80a2b388673a5e8f562e189689a795c0'
+app.post('/webhook', function (req, res) {
+	console.log("I am here.")
+	console.log(req.headers['x-shopify-hmac-sha256'])
+    handleRequest(req, res);
+})
+
+function handleRequest(req, res) {
+    console.log("@@@ HandleRequest @@@")
+    if (verifyShopifyHook(req)) {
+        res.writeHead(200);
+        console.log("Amdon Verified")
+        res.end('Verified webhook');
+    } else {
+        res.writeHead(401);
+        console.log("Amdon Verified")
+        res.end('Unverified webhook');
+    }
+}
+
+function verifyShopifyHook(req) {
+            .update(new Buffer(req.body, 'utf8'))
+            .digest('base64');
+    
+    console.log("###########")
+    console.log(req.headers)
+    console.log(digest)
+    console.log("!---------!")
+    return digest === req.headers['X-Shopify-Hmac-Sha256'];
+}
+
+/* END OF WEBHOOK */
+
 
 /* ~ For Webhook ~ */ 
 // const SECRET = config.secret;
