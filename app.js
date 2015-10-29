@@ -115,25 +115,26 @@ app.get( '/login/authenticate', authenticate);
 /* ~ For Webhook ~ */ 
 const SECRET = config.secret;
 
-app.use(function(req, res, next) {
-  req.rawBody = '';
-  req.setEncoding('utf8');
+// app.use(function(req, res, next) {
+//   req.rawBody = '';
+//   req.setEncoding('utf8');
 
-  req.on('data', function(chunk) { 
-    req.rawBody += chunk;
-  });
+//   req.on('data', function(chunk) { 
+//     req.rawBody += chunk;
+//   });
 
-  req.on('end', function() {
-    next();
-  });
-});
-app.use(express.bodyParser());
+//   req.on('end', function() {
+//     next();
+//   });
+// });
+// app.use(express.bodyParser());
 
 app.post('/webhook', function (req, res) {
-	console.log("HERE is webhook")
+	
     var json = req.body;
     res.send(200);
-        
+	console.log("!!!!!!!webhook!!!!!!ß")
+    console.log(req)
  	if (verifyShopifyHook(req)) {
  	    res.writeHead(200);
  	    res.end('Verified webhook');
@@ -143,14 +144,11 @@ app.post('/webhook', function (req, res) {
  	}
 });
 function verifyShopifyHook(req) {
+	console.log("!!!!!!!HERE!!!!!!ß")
     var digest = crypto.createHmac('SHA256', SECRET)
             .update(new Buffer(req.body, 'utf8'))
             .digest('base64');
     
-    console.log("#########")
-    console.log(req.headers['X-Shopify-Hmac-Sha256'])
-    console.log(digest)
-    console.log("!---------!")
     return digest === req.headers['X-Shopify-Hmac-Sha256'];
 }
 
