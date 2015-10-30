@@ -108,12 +108,20 @@ app.get('/', function(req, res) {
 app.post('/webhook', function (req, res) {
 	console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
     parseRequestBody(req, res)
+    console.log("Debug ----------------------1")
+    console.log(req.headers)
 	console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 })
 function verifyShopifyHook(req) {
+    console.log("Debug ----------------------4")
+
     var digest = crypto.createHmac('SHA256', '80a2b388673a5e8f562e189689a795c0')
             .update(new Buffer(req.body, 'utf8'))
             .digest('base64');
+    console.log("Debug ----------------------4.1")
+    console.log(digest)
+    console.log(req.headers['x-shopify-hmac-sha256'])
+
     return digest === req.headers['x-shopify-hmac-sha256'];
 }
 
@@ -123,17 +131,27 @@ function parseRequestBody(req, res) {
     req.on('data', function(chunk) {
         req.body += chunk.toString('utf8');
     });
+    console.log("Debug ----------------------2")
+
     req.on('end', function() {
+	    console.log("Debug ----------------------2.1")
+
         handleRequest(req, res);
     });
 }
 
 function handleRequest(req, res) {
+    console.log("Debug ----------------------3")
+
     if (verifyShopifyHook(req)) {
+	    console.log("Debug ----------------------5.3.1")
+
         res.writeHead(200);
         console.log("Verified webhook")
         res.end('Verified webhook');
     } else {
+	    console.log("Debug ----------------------5.3.2")
+
         res.writeHead(401);
         console.log("Unverified webhook")
         res.end('Unverified webhook');
