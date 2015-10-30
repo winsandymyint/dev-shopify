@@ -5,6 +5,7 @@
 var express = require('express')
   , routes = require('./routes')
   , request = require('request')
+  , bodyParser = require('body-parser')
   , crypto = require('crypto')
   /*
 var url= 'http://requestb.in/18bnkam1?inspect'
@@ -43,7 +44,7 @@ else {
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-  app.use(express.bodyParser());
+  app.use(express.bodyParser({ type: 'application/*+json' }));
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({ secret: "shhhhh!!!!" }));
@@ -104,38 +105,40 @@ app.get('/', function(req, res) {
 });
 
 /* WEBHOOK */
-var hookSecret= '80a2b388673a5e8f562e189689a795c0'
 app.post('/webhook', function (req, res) {
-	console.log("HELLO ----- ------- -----------------")
-	console.log("I am here.")
-	console.log(req.headers['x-shopify-hmac-sha256'])
-    handleRequest(req, res);
+	console.log(req.body)
+    parseRequestBody(req, res)
 })
+function verifyShopifyHook(req) {
+    var digest = crypto.createHmac('SHA256', '80a2b388673a5e8f562e189689a795c0')
+            .update(new Buffer(req.body, 'utf8'))
+            .digest('base64');
+    return digest === req.headers['x-shopify-hmac-sha256'];
+}
+
+function parseRequestBody(req, res) {
+    req.body = '';
+
+    req.on('data', function(chunk) {
+        req.body += chunk.toString('utf8');
+    });
+    req.on('end', function() {
+        handleRequest(req, res);
+    });
+}
 
 function handleRequest(req, res) {
-    console.log("@@@ HandleRequest @@@")
     if (verifyShopifyHook(req)) {
         res.writeHead(200);
-        console.log("Amdon Verified")
+        console.log("Verified webhook")
         res.end('Verified webhook');
     } else {
         res.writeHead(401);
-        console.log("Amdon UNVerified")
+        console.log("Unverified webhook")
         res.end('Unverified webhook');
     }
 }
 
-function verifyShopifyHook(req) {
-	var digest = crypto.createHmac('SHA256', config.secret)
-    .update(new Buffer(req.body, 'utf8'))
-    .digest('base64');
-    
-    console.log("###########")
-    console.log(req.headers)
-    console.log(digest)
-    console.log("!---------!")
-    return digest === req.headers['X-Shopify-Hmac-Sha256'];
-}
 
 /* END OF WEBHOOK */
 app.get('/login', function(req, res) {
