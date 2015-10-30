@@ -132,6 +132,8 @@ function parseRequestBody(req, res) {
         req.body += chunk.toString('utf8');
     });
     console.log("Debug ----------------------2")
+    console.log(req.body)
+    console.log("Debug ----------------------2.0.1")
 
     req.on('end', function() {
 	    console.log("Debug ----------------------2.1")
