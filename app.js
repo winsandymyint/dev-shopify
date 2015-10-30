@@ -106,7 +106,9 @@ app.get('/', function(req, res) {
 
 /* WEBHOOK */
 app.post('/webhook', function (req, res) {
+	console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
     parseRequestBody(req, res)
+	console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 })
 function verifyShopifyHook(req) {
     var digest = crypto.createHmac('SHA256', '80a2b388673a5e8f562e189689a795c0')
