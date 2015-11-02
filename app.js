@@ -145,14 +145,8 @@ function handleRequest(req, res) {
 }
 
 function bookSubscribe (req, res) {
-	// console.log(req.headers)
-	// console.log(req.body)
-	// console.log(req.res)
 	var obj = JSON.parse(req);
-	console.log(testData.customer.email)
-	console.log(testData.customer.first_name)
-	console.log(testData.fulfillment_status=='fulfilled')
-	if(testData.fulfillment_status=='fulfilled'){ // Check the payment is successfully or not! Fulfilled 
+	if(obj.fulfillment_status=='fulfilled'){ // Check the payment is successfully or not! Fulfilled 
 		//not sure line_items.fulfillment_status == ?
 		arr= []
 		for(i in obj.line_items) { arr.push(obj.line_items[i].sku) }
