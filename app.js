@@ -27,7 +27,7 @@ var nodify = require('nodify-shopify');
  
 var apiKey, secret; 
 var persistentKeys= {};
-
+var webhookVarified= false;
 //If Heroku or Foreman
  if(process.env.SHOPIFY_API_KEY != undefined && process.env.SHOPIFY_SECRET != undefined){
  	apiKey = process.env.SHOPIFY_API_KEY;
@@ -44,7 +44,7 @@ else {
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-  app.use(express.bodyParser());
+  app.use(express.bodyParser({ type: 'application/*+json' }));
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({ secret: "shhhhh!!!!" }));
@@ -106,22 +106,12 @@ app.get('/', function(req, res) {
 
 /* WEBHOOK */
 app.post('/webhook', function (req, res) {
-	console.log("####################")
     parseRequestBody(req, res)
-    console.log("Debug ----------------------1")
-    console.log(req.headers)
-	console.log("####################")
 })
 function verifyShopifyHook(req) {
-    console.log("Debug ----------------------4")
-
     var digest = crypto.createHmac('SHA256', '3cdb276557ce076221a416efa6270ab1d97c34ae4f0757c4e75b5dc0cf95e4f0')
             .update(new Buffer(req.body, 'utf8'))
             .digest('base64');
-    console.log("Debug ----------------------4.1")
-    console.log(digest)
-    console.log(req.headers['x-shopify-hmac-sha256'])
-
     return digest === req.headers['x-shopify-hmac-sha256'];
 }
 
@@ -131,29 +121,19 @@ function parseRequestBody(req, res) {
     req.on('data', function(chunk) {
         req.body += chunk.toString('utf8');
     });
-    console.log("Debug ----------------------2")
-    console.log(req)
-    console.log("Debug ----------------------2.0.1")
-
     req.on('end', function() {
-	    console.log("Debug ----------------------2.1")
-
         handleRequest(req, res);
     });
 }
 
 function handleRequest(req, res) {
-    console.log("Debug ----------------------3")
-
     if (verifyShopifyHook(req)) {
-	    console.log("Debug ----------------------5.3.1")
-        bookSubscribe(req)
         res.writeHead(200);
         console.log("Verified webhook")
-        res.end('Verified webhook');
+        webhookVarified= true
+        bookSubscribe(req.body, res)
+        res.end(req.body);
     } else {
-	    console.log("Debug ----------------------5.3.2")
-
         res.writeHead(401);
         console.log("Unverified webhook")
         res.end('Unverified webhook');
@@ -161,11 +141,15 @@ function handleRequest(req, res) {
 }
 
 function bookSubscribe (req, res) {
+	// console.log(req.headers)
+	// console.log(req.body)
+	// console.log(req.res)
 	var obj = JSON.parse(req);
 	console.log(testData.customer.email)
 	console.log(testData.customer.first_name)
 	console.log(testData.fulfillment_status=='fulfilled')
-	if(testData.fulfillment_status=='fulfilled'){ 
+	if(testData.fulfillment_status=='fulfilled'){ // Check the payment is successfully or not! Fulfilled 
+		//not sure line_items.fulfillment_status == ?
 		arr= []
 		for(i in obj.line_items) { arr.push(obj.line_items[i].sku) }
 	    data= {
@@ -195,6 +179,7 @@ function bookSubscribe (req, res) {
 	}
 	
 }
+
 /* END OF WEBHOOK */
 app.get('/login', function(req, res) {
 	try {
