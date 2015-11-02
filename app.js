@@ -112,6 +112,10 @@ function verifyShopifyHook(req) {
     var digest = crypto.createHmac('SHA256', '3cdb276557ce076221a416efa6270ab1d97c34ae4f0757c4e75b5dc0cf95e4f0')
             .update(new Buffer(req.body, 'utf8'))
             .digest('base64');
+    console.log("*************************************")
+    console.log(digest)
+    console.log(req.headers['x-shopify-hmac-sha256'])
+    console.log("*************************************")
     return digest === req.headers['x-shopify-hmac-sha256'];
 }
 
