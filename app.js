@@ -96,6 +96,8 @@ app.get('/', function(req, res) {
 		} 
 	}
 	else {
+		console.log("^^^^^^^")
+		console.log(shop)
 		console.log('session is not valid yet, we need some authentication !')
 		if(shop !== undefined)
 			res.redirect('/login/authenticate?shop='+shop);
