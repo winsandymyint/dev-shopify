@@ -115,7 +115,7 @@ app.post('/webhook', function (req, res) {
 function verifyShopifyHook(req) {
     console.log("Debug ----------------------4")
 
-    var digest = crypto.createHmac('SHA256', '80a2b388673a5e8f562e189689a795c0')
+    var digest = crypto.createHmac('SHA256', '3cdb276557ce076221a416efa6270ab1d97c34ae4f0757c4e75b5dc0cf95e4f0')
             .update(new Buffer(req.body, 'utf8'))
             .digest('base64');
     console.log("Debug ----------------------4.1")
