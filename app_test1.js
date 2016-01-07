@@ -7,21 +7,7 @@ var express = require('express')
   , request = require('request')
   , bodyParser = require('body-parser')
   , crypto = require('crypto')
-  /*
-var url= 'http://requestb.in/18bnkam1?inspect'
-// var url= 'http://requestb.in/onfgwfon'
 
-request(url, function (err, response, body) {
-	if(!err){
-		console.log('AAAAAAAAA')
-		// console.log(body)
-		console.log('test')
-	}else{
-		console.log('###$#IJKR#J:')
-		console.log('error')
-		console.log('!----------!')
-	}
-})*/
 var app = module.exports = express.createServer();
 var nodify = require('nodify-shopify');
  
@@ -40,7 +26,6 @@ else {
 }
 
 // Configuration
-
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -77,9 +62,25 @@ app.get('/', function(req, res) {
 	}
 
 	if(shop !== undefined && key != undefined) {
+		console.log('Debuging IF')
 		session = nodify.createSession(shop, apiKey, secret, key);
 		if(session.valid()){
+			console.log('Debuging IF\'s session.valid()')
 			console.log('session is valid for <',shop,'>')
+
+			/* WebHook creation */
+			/*var data = {
+			             "topic": "orders\/create",
+			            "address": "http:\/\/amdon.heroku.com\/",
+			             "format": "json"
+			};
+			console.log(session.webhook)
+			session.webhook.create( data, function(err, webhook){
+				console.log("------")
+			    console.log(webhook);
+				console.log("------")
+			    if(err) { console.log(webhook); throw err;}
+			});*/
 
 			session.order.all({limit: 5}, function(err, orders){
 				console.log('orders:',orders);
@@ -96,8 +97,7 @@ app.get('/', function(req, res) {
 		} 
 	}
 	else {
-		console.log("^^^^^^^")
-		console.log(shop)
+		console.log('Debuging ELSE') //Just Enter whenever website is run
 		console.log('session is not valid yet, we need some authentication !')
 		if(shop !== undefined)
 			res.redirect('/login/authenticate?shop='+shop);
@@ -111,13 +111,9 @@ app.post('/webhook', function (req, res) {
     parseRequestBody(req, res)
 })
 function verifyShopifyHook(req) {
-    var digest = crypto.createHmac('SHA256', '3cdb276557ce076221a416efa6270ab1d97c34ae4f0757c4e75b5dc0cf95e4f0')
+    var digest = crypto.createHmac('SHA256', config.webhookSecret)
             .update(new Buffer(req.body, 'utf8'))
             .digest('base64');
-    console.log("*************************************")
-    console.log(digest)
-    console.log(req.headers['x-shopify-hmac-sha256'])
-    console.log("*************************************")
     return digest === req.headers['x-shopify-hmac-sha256'];
 }
 
@@ -148,7 +144,10 @@ function handleRequest(req, res) {
 
 function bookSubscribe (req, res) {
 	var obj = JSON.parse(req);
-	if(obj.fulfillment_status=='fulfilled'){ // Check the payment is successfully or not! Fulfilled 
+	console.log(testData.customer.email)
+	console.log(testData.customer.first_name)
+	console.log(testData.fulfillment_status=='fulfilled')
+	if(testData.fulfillment_status=='fulfilled'){ // Check the payment is successfully or not! Fulfilled 
 		//not sure line_items.fulfillment_status == ?
 		arr= []
 		for(i in obj.line_items) { arr.push(obj.line_items[i].sku) }
@@ -181,6 +180,7 @@ function bookSubscribe (req, res) {
 }
 
 /* END OF WEBHOOK */
+
 app.get('/login', function(req, res) {
 	try {
 		shop = res.body.shop;
@@ -190,10 +190,12 @@ app.get('/login', function(req, res) {
 	}
 
 	if(req.session.shopify){
+		console.log("Debugging req.session.shopify")
 		res.redirect("/");
 	}
 	else if(shop != undefined) {
 		//redirect to auth
+		console.log("shop !=undefined")
 		res.redirect("/login/authenticate");
 	}
 	else{
@@ -205,8 +207,10 @@ app.post('/login/authenticate', authenticate);
 app.get( '/login/authenticate', authenticate);
 
 function authenticate(req, res) {
+	console.log('Debugging authenticate')
 	var shop = req.query.shop || req.body.shop;
 	if(shop !== undefined && shop !== null) {	
+		console.log('Debugging IF SHOP !==undefined && shop !== null')
 	  console.log('creating a session for', shop, apiKey, secret)
 		session = nodify.createSession(shop, apiKey, secret, {
 	    scope: {orders: "read", products: "read"},
@@ -217,6 +221,7 @@ function authenticate(req, res) {
 	    }
 	  });
 	}	else {
+		console.log('Debugging ELSE')
 		res.redirect('/login');
 	}
 }
