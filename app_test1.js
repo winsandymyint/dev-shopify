@@ -1,3 +1,4 @@
+
 /**
  * Module dependencies.
  */
@@ -25,7 +26,7 @@ request(url, function (err, response, body) {
 var app = module.exports = express.createServer();
 var nodify = require('nodify-shopify');
  
-var apiKey, secret; 
+var apiKey, secret, webhookID; 
 var persistentKeys= {};
 var webhookVarified= false;
 //If Heroku or Foreman
@@ -90,6 +91,8 @@ app.get('/', function(req, res) {
 			    if(err) { console.log(webhook); throw err;}
 			    console.log("---get--webhook-");
 			    console.log(webhook);
+			    console.log(webhook.id);
+			    webhookID= webhook.id
 			    console.log("---end--webhook-");
 			});
 			session.order.all({limit: 5}, function(err, orders){
@@ -122,7 +125,7 @@ app.post('/webhook', function (req, res) {
     parseRequestBody(req, res)
 })
 function verifyShopifyHook(req) {
-    var digest = crypto.createHmac('SHA256', '3cdb276557ce076221a416efa6270ab1d97c34ae4f0757c4e75b5dc0cf95e4f0')
+    var digest = crypto.createHmac('SHA256', webhookID) //'3cdb276557ce076221a416efa6270ab1d97c34ae4f0757c4e75b5dc0cf95e4f0')
             .update(new Buffer(req.body, 'utf8'))
             .digest('base64');
     console.log("*************************************")
