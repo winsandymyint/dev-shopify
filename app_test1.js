@@ -80,7 +80,18 @@ app.get('/', function(req, res) {
 		session = nodify.createSession(shop, apiKey, secret, key);
 		if(session.valid()){
 			console.log('session is valid for <',shop,'>')
-
+			console.log(session.webhook)
+			var _new = {
+			             "topic": "orders\/create",
+			            "address": "http:\/\/amdon.heroku.com\/webhook",
+			             "format": "json"
+			};
+			session.webhook.create( _new, function(err, webhook){
+			    if(err) { console.log(webhook); throw err;}
+			    console.log("---get--webhook-");
+			    console.log(webhook);
+			    console.log("---end--webhook-");
+			});
 			session.order.all({limit: 5}, function(err, orders){
 				console.log('orders:',orders);
 				if(err) { throw err;}
